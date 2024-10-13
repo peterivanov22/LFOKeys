@@ -63,5 +63,10 @@ private:
     std::vector<std::unique_ptr<EnvelopeEditor>>& envEds;
 
     
+    
+    bool keyPressed(const KeyPress &k) override;
+    
+    
+    
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WubDaddyAudioProcessorEditor)
 };

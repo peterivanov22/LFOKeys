@@ -14,6 +14,9 @@
 WubDaddyAudioProcessorEditor::WubDaddyAudioProcessorEditor (WubDaddyAudioProcessor& p)
     : AudioProcessorEditor (&p), audioProcessor (p), apvts(p.apvts), envEds(p.envEds)
 {
+    
+    
+    
     for (auto&& envEd : envEds ){
         addAndMakeVisible(*envEd);
     }
@@ -129,8 +132,14 @@ void WubDaddyAudioProcessorEditor::paint (juce::Graphics& g)
 
     g.setColour (juce::Colours::white);
     g.setFont (15.0f);
-    //g.drawFittedText ("Hello World!", getLocalBounds(), juce::Justification::centred, 1);
-    
+
+    //below "clicks" on the plugin so it has focus, so it receives keypresses
+    //TODO: probably a better/ more robust way to do this
+    if (!this->hasKeyboardFocus(true) && this->isVisible())
+    {
+      this->grabKeyboardFocus();
+    }
+
 }
 
 void WubDaddyAudioProcessorEditor::resized()
@@ -245,4 +254,34 @@ void WubDaddyAudioProcessorEditor::resized()
     
 
 
+}
+
+
+//key press logic to turn on/off global toggles
+
+bool WubDaddyAudioProcessorEditor::keyPressed(const KeyPress &k) {
+    bool flag = false;
+    if( k.getTextCharacter() == 'a' ){
+        globalButtonArray[0].triggerClick();
+        flag = true;
+    }
+    if( k.getTextCharacter() == 's' ){
+        globalButtonArray[1].triggerClick();
+        flag = true;
+    }
+    if( k.getTextCharacter() == 'd' ){
+        globalButtonArray[2].triggerClick();
+        flag = true;
+    }
+    if( k.getTextCharacter() == 'f' ){
+        globalButtonArray[3].triggerClick();
+        flag = true;
+    }
+    if( k.getTextCharacter() == 'g' ){
+        globalButtonArray[4].triggerClick();
+        flag = true;
+    }
+    //if true then keypress is "consumed" and not passed anywhere else
+    return flag;
+ 
 }
