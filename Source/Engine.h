@@ -12,7 +12,6 @@
 
 
 #include <JuceHeader.h>
-#include "LFO.h"
 #include "EnvelopeEditor.h"
 #include "WavetableOscillator.h"
 

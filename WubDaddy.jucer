@@ -22,12 +22,6 @@
     <GROUP id="{90742607-3B66-7777-CEF9-B188D39D6E2A}" name="DSP">
       <FILE id="JT9YTz" name="Engine.cpp" compile="1" resource="0" file="Source/Engine.cpp"/>
       <FILE id="auP35I" name="Engine.h" compile="0" resource="0" file="Source/Engine.h"/>
-      <FILE id="L5H0Lm" name="LFO.cpp" compile="1" resource="0" file="Source/LFO.cpp"/>
-      <FILE id="D26Mek" name="LFO.h" compile="0" resource="0" file="Source/LFO.h"/>
-      <FILE id="d2umgE" name="TempoSync.cpp" compile="1" resource="0" file="Source/TempoSync.cpp"/>
-      <FILE id="pcWox4" name="TempoSync.h" compile="0" resource="0" file="Source/TempoSync.h"/>
-      <FILE id="tZb86q" name="WavetableOscillator.cpp" compile="1" resource="0"
-            file="Source/WavetableOscillator.cpp"/>
       <FILE id="MFAFkB" name="WavetableOscillator.h" compile="0" resource="0"
             file="Source/WavetableOscillator.h"/>
     </GROUP>

@@ -107,8 +107,10 @@ WubDaddyAudioProcessorEditor::WubDaddyAudioProcessorEditor (WubDaddyAudioProcess
     }
 
     
+    //change initial values for certain parameters
+    rateSliderArray[1].setValue(0.75);
+    rateSliderArray[2].setValue(0);
 
-    
 
     
 

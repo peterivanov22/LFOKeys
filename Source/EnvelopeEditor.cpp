@@ -18,24 +18,29 @@ EnvelopeEditor::EnvelopeEditor(int flag) : mouseEditModel(envDesc), env(MSEG_DEF
 
     
     //initialize default waveforms
-    //flag ddetermines shape
+    //flag determines shape
     if (envDesc.empty()){
         if (flag == 0){
-            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH });
+            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
         }
         if (flag == 1){
-            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2-1 });
-            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    1 });
+            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
 
-            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2 });
         }
         if (flag == 2){
-            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH });
+            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
+
         }
+        
         if (flag == 3){
-            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2-1 });
-            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    1 });
-            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2 });
+            envDesc.push_back({ 0.5f, 1.0f, 2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4});
+            envDesc.push_back({ 1.0f, 0.5f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4 });
+            envDesc.push_back({ 0.5f, 0.0f, 2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4 });
+            envDesc.push_back({ 0.0f, 0.5f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4});
+
         }
         if (flag == 4){
             envDesc.push_back({ 0.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2 });

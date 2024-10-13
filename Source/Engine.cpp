@@ -23,6 +23,7 @@ processor(p)
 //waveOscArray({WavetableOscillator(msegTableArray[0]), WavetableOscillator(msegTableArray[1]) })
 {
     //probaby should find better place to initialize envEds then here
+    //the integers set initial waveforms, which are defined in EnvelopeEditor.cpp
     envEds.push_back(std::make_unique<EnvelopeEditor>(0));
     envEds.push_back(std::make_unique<EnvelopeEditor>(1));
     envEds.push_back(std::make_unique<EnvelopeEditor>(2));
@@ -41,10 +42,8 @@ processor(p)
         i++;
     }
     
-    //
-
     
-    //initialize variables
+    //initialize parameters
     for (int i=0;i<maxEnvelopes;i++){
         
         
@@ -82,16 +81,9 @@ processor(p)
     
         //do we need below here?
         userVolumeArray[i] = 1 - *apvts.getRawParameterValue(Parameters::volumeStringArray[i]);
-        
     }
 
 
-    //test
-
-    //volumeToggle1.onClick = [this] { doSomething(); };
-    //userVolumeArray[0]=1 - *apvts.getRawParameterValue(Parameters::ID_VOLUME1);
-
-    //highPass1.setCutoffFrequencyHz(*apvts.getRawParameterValue(Parameters::ID_EQ1MIN));
     
 
 
@@ -258,8 +250,6 @@ void Engine::parameterChanged(const String& parameterID, float newValue )
         
         if(parameterID == Parameters::globalToggleStringArray[i]){
             globalToggleArray[i] = (bool) newValue;
-            //set other values to false
-   
         }
     }
     
@@ -301,7 +291,7 @@ void Engine::changeListenerCallback(ChangeBroadcaster* source)
     for (auto&& envEd : envEds ){
         if (source == &(*envEd)){
             setMSEGTable(*envEd, msegTableArray[i]);
-            printf("yes");
+            //printf("yes");
         }
         i++;
     }
@@ -310,14 +300,7 @@ void Engine::changeListenerCallback(ChangeBroadcaster* source)
         
     }
     
-    /*
-    if (source == &envEd)
-    {
-        setMSEGTable(envEd);
-        //waveOsc.setWavetable(msegTable);
-        printf("yes");
-    }
-    */
+
 }
 
 void Engine::setMSEGTable(EnvelopeEditor& envEd, AudioSampleBuffer& buffer)
