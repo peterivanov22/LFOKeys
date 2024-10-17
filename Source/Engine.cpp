@@ -20,9 +20,8 @@ env(EnvelopeEditor::MSEG_DEFAULT_PIXELS_WIDTH),
 apvts(a),
 processor(p)
 
-//waveOscArray({WavetableOscillator(msegTableArray[0]), WavetableOscillator(msegTableArray[1]) })
 {
-    //probaby should find better place to initialize envEds then here
+    //probably should find better place to initialize envEds then here
     //the integers set initial waveforms, which are defined in EnvelopeEditor.cpp
     envEds.push_back(std::make_unique<EnvelopeEditor>(0));
     envEds.push_back(std::make_unique<EnvelopeEditor>(1));
@@ -33,11 +32,7 @@ processor(p)
     int i = 0;
     for (auto&& oneEd : envEds ){
         oneEd->addChangeListener(this);
-        
-        //Is this the best way?
-        //best I could come up with
         setMSEGTable(*oneEd,msegTableArray[i]);
-
         waveOscArray[i] = new WavetableOscillator(msegTableArray[i]);
         i++;
     }
@@ -45,8 +40,6 @@ processor(p)
     
     //initialize parameters
     for (int i=0;i<maxEnvelopes;i++){
-        
-        
         apvts.addParameterListener(Parameters::volumeStringArray[i], this);
         apvts.addParameterListener(Parameters::EQMinStringArray[i], this);
         apvts.addParameterListener(Parameters::EQMaxStringArray[i], this);
@@ -54,16 +47,12 @@ processor(p)
         apvts.addParameterListener(Parameters::volumeToggleStringArray[i], this);
         apvts.addParameterListener(Parameters::EQToggleStringArray[i], this);
         apvts.addParameterListener(Parameters::globalToggleStringArray[i], this);
-
-        
         
         userVolumeArray[i]=0;
         userEQMinArray[i]= 1.0;
         userEQMaxArray[i]= 20000.0;
         
-  
-
-        
+          
         volumeToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::volumeToggleStringArray[i]);
         EQToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::EQToggleStringArray[i]);
         globalToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::globalToggleStringArray[i]);
@@ -71,28 +60,20 @@ processor(p)
         lowPassArray[i].setEnabled(EQToggleArray[i]);
         highPassArray[i].setEnabled(EQToggleArray[i]);
 
-        
         if(volumeToggleArray[i]){
             lfoValuePtrArray[i] = &lfoVolumeArray[i];
         }
         else{
             lfoValuePtrArray[i] =  &defaultVolumeValue;
         }
-    
         //do we need below here?
         userVolumeArray[i] = 1 - *apvts.getRawParameterValue(Parameters::volumeStringArray[i]);
     }
-
-
-    
-
-
 }
 
 
 void Engine::prepare(const dsp::ProcessSpec& spec)
 {
-    //lfo.prepare(spec);
     
     for (int i=0;i<maxEnvelopes;i++){
         gainArray[i].prepare(spec);
@@ -104,15 +85,10 @@ void Engine::prepare(const dsp::ProcessSpec& spec)
         gainArray[i].setGainLinear(1);
 
         waveOscArray[i]->prepare(spec);
-
     }
 
-    
-    
     //prob shouldnt live here
     sampleRate = spec.sampleRate;
-
-    
 }
 
 
@@ -123,8 +99,6 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context){
     
 void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::MidiBuffer& midiMessages){
 
-    
-    
     for (int i=0; i< maxEnvelopes; i++){
         auto lfoOut = waveOscArray[i]->getSample(m_lfo);    // [5]
         auto lfoVolume = juce::jmap (lfoOut, 0.0f, 1.0f, userVolumeArray[i], 1.0f);
@@ -146,11 +120,8 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::M
         }
     
     }
-    
-
     //old code for processing midi
     //logic now changed to parameter buttons that user can toggle
-    
     /*
     for (const auto metadata : midiMessages)
     {
@@ -160,61 +131,26 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::M
         {
             //60 correpsonds to C3 note
             if (message.getNoteNumber() == 60){
-                
-                //keyPressed(0, true);
                 //lfoValuePtr = &lfoVolumeArray[0];
-            }
-            if (message.getNoteNumber() == 62){
-                keyPressed(1, true);
-
-                //lfoValuePtr = &lfoVolumeArray[1];
+                //more logic...
             }
         }
         else if (message.isNoteOff())
         {
             if (message.getNoteNumber() == 60){
-                keyPressed(0, false);
+                //logic
             }
-            if (message.getNoteNumber() == 62){
-                keyPressed(1, false);
-            }
-            //lfoValuePtr = &lfoValue;
         }
     }
     */
-    
-    
-    
-    
-
 }
 
-/*
-void Engine::keyPressed(int index, bool pressed){
-    if (volumeToggle1 && pressed){
-        lfoValuePtr = &lfoVolumeArray[index];
-    }
-    else
-        lfoValuePtr = &lfoValue;
-    
-    if (EQToggle1 && pressed)
-    {
-        lowPass1.setEnabled(pressed);
-        highPass1.setEnabled(pressed);
-    }
-    else {
-        lowPass1.setEnabled(false);
-        highPass1.setEnabled(false);
-    }
-
-}
- */
 
 
 void Engine::reset()
 {
-    //lfo.reset();
 }
+
 
 void Engine::parameterChanged(const String& parameterID, float newValue )
 {
@@ -283,37 +219,25 @@ void Engine::updateParameters()
     //dryWetMix.setDryDecibels(*parameters.getRawParameterValue(Params::ID_DRY_GAIN));
 }
     
-
+//when user changes waveform this is called and will update underlying data structure
 void Engine::changeListenerCallback(ChangeBroadcaster* source)
 {
-    //auto bufferIterator = msegTableVector.begin();
     int i=0;
     for (auto&& envEd : envEds ){
         if (source == &(*envEd)){
             setMSEGTable(*envEd, msegTableArray[i]);
-            //printf("yes");
         }
         i++;
     }
-    
-    for (int i = 0; i < envEds.size(); i++){
-        
-    }
-    
-
 }
 
 void Engine::setMSEGTable(EnvelopeEditor& envEd, AudioSampleBuffer& buffer)
 {
-    
     buffer.setSize(1, int(tableSize));
-    auto* samples = buffer.getWritePointer (0);                                   // [3]
-    //auto angleDelta = juce::MathConstants<double>::twoPi / (double) (tableSize - 1); // [4]
-    //auto currentAngle = 0.0;
+    auto* samples = buffer.getWritePointer (0);
 
-    
     env.reset(&envEd.envDesc);
-    float fx, fy;
+    float fy;
     //do we need to do below?
     bool endOfEnvelope = env.getSample(fy);
     samples[0] = fy;
@@ -325,9 +249,6 @@ void Engine::setMSEGTable(EnvelopeEditor& envEd, AudioSampleBuffer& buffer)
         //should be float between 0 and 1
         samples[i] = (float) sample;
     }
-    //so now msegTable is set
-    //then what?
-    
 }
 
 

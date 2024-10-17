@@ -77,30 +77,8 @@ public:
     
     std::vector<std::unique_ptr<EnvelopeEditor>> envEds;
     
-    
-    
-    EnvelopeEditor envEditorArray [5];
-    
-    
     AudioPlayHead* playHead;
     AudioPlayHead::PositionInfo hostInfo;
-    //std::vector<EnvelopeEditor> envEdVector; {EnvelopeEditor(), EnvelopeEditor()};
-
-    //envEds.push_back(std::make_unique<EnvelopeEditor>());
-    //envEds.push_back(std::make_unique<EnvelopeEditor>());
-
-    void createEditorLayout()
-    {
-        //std::vector<std::unique_ptr<EnvelopeEditor>> envEds;
-
-        envEds.push_back(std::make_unique<EnvelopeEditor>());
-        envEds.push_back(std::make_unique<EnvelopeEditor>());
-        
-        //return envEds;
-    }
-
-    //envEds.pushBack(envEd);
-    //envEds.pushBack(envEd2);
 
     Engine engine;
     

@@ -28,7 +28,6 @@ WubDaddyAudioProcessor::WubDaddyAudioProcessor()
 
 //question:  can we initialize the unique_ptr vector envEds in the intializer? Or in the header file? It seems problematic so I'm essentially initializing it in the engine file
 {
-    //createEditorLayout();
     
 }
 
