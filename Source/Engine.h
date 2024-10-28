@@ -71,6 +71,8 @@ private:
     //but i guess we need to to attach listener when user changes the envelop (mouse click)
     //TODO: better way to do this?
     EnvelopeEditor& envEd;
+    MultiSegmentEnvelopeGenerator env;
+
     std::vector<std::unique_ptr<EnvelopeEditor>>& envEds;
 
     static const int maxEnvelopes = 4;
@@ -78,14 +80,10 @@ private:
     // TODO: causes envelope reset on toggle switch
     bool toggleActivated[maxEnvelopes] = { false };
     
-    MultiSegmentEnvelopeGenerator env;
 
     AudioProcessorValueTreeState& apvts;
     AudioProcessor& processor;
 
-    //AudioSampleBuffer dryBuffer;
-
-    //LFO lfo;
 
     
     const unsigned int tableSize = EnvelopeEditor::MSEG_DEFAULT_PIXELS_WIDTH;      // [2]
