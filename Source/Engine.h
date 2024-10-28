@@ -62,6 +62,9 @@ public:
     void keyPressed(int index, bool pressed);
     void updateRate(float value, int index);
     
+    // TODO: Causes envelope reset on toggle switch
+    void resetEnvelope(int envelopeIndex);
+    
 private:
     
     //we probably dont want to pass the entire Envelop Editor
@@ -70,7 +73,10 @@ private:
     EnvelopeEditor& envEd;
     std::vector<std::unique_ptr<EnvelopeEditor>>& envEds;
 
-    static const int maxEnvelopes = 5;
+    static const int maxEnvelopes = 4;
+    
+    // TODO: causes envelope reset on toggle switch
+    bool toggleActivated[maxEnvelopes] = { false };
     
     MultiSegmentEnvelopeGenerator env;
 

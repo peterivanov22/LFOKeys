@@ -12,6 +12,7 @@
 #include "Engine.h"
 #include "Parameters.h"
 #include "EnvelopeEditor.h"
+#include "SystemMidiInputHandler.h"
 
 
 
@@ -109,9 +110,7 @@ public:
     double mHostBPM;
     
 private:
-    
-
-    
+    SystemMidiInputHandler midiHandler;
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (WubDaddyAudioProcessor)
 };

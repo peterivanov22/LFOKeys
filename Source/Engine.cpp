@@ -1,7 +1,7 @@
 /*
   ==============================================================================
 
-    GuillotineEngine.cpp
+    Engine.cpp
     Created: 26 Jul 2024 1:19:26pm
     Author:  Peter Ivanov
 
@@ -28,7 +28,9 @@ processor(p)
     envEds.push_back(std::make_unique<EnvelopeEditor>(1));
     envEds.push_back(std::make_unique<EnvelopeEditor>(2));
     envEds.push_back(std::make_unique<EnvelopeEditor>(3));
-    envEds.push_back(std::make_unique<EnvelopeEditor>(4));
+    
+    // 4th envelop causing error with negative numbers
+    //envEds.push_back(std::make_unique<EnvelopeEditor>(4));
 
     int i = 0;
     for (auto&& oneEd : envEds ){
@@ -60,8 +62,6 @@ processor(p)
         userVolumeArray[i]=0;
         userEQMinArray[i]= 1.0;
         userEQMaxArray[i]= 20000.0;
-        
-  
 
         
         volumeToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::volumeToggleStringArray[i]);
@@ -139,33 +139,41 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::M
     for (int i=0; i< maxEnvelopes; i++){
         if (globalToggleArray[i]){
             m_rate = rateArray[i];
+            
+            // This will activate when the toggle changes to reset the envelope
+            if (toggleActivated[i]) {
+                resetEnvelope(i);
+                toggleActivated[i] = false;
+            }
+            
             highPassArray[i].process(context);
             lowPassArray[i].process(context);
             gainArray[i].process(context);
             break;
         }
-    
     }
     
 
     //old code for processing midi
     //logic now changed to parameter buttons that user can toggle
     
-    /*
+    
     for (const auto metadata : midiMessages)
     {
         auto message = metadata.getMessage();
         
+        
         if (message.isNoteOn())
         {
+            juce::Logger::outputDebugString("Received C note");
             //60 correpsonds to C3 note
             if (message.getNoteNumber() == 60){
-                
+                //printf('recieved C note');
                 //keyPressed(0, true);
                 //lfoValuePtr = &lfoVolumeArray[0];
             }
             if (message.getNoteNumber() == 62){
-                keyPressed(1, true);
+                // keyPressed(1, true);
 
                 //lfoValuePtr = &lfoVolumeArray[1];
             }
@@ -173,20 +181,19 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::M
         else if (message.isNoteOff())
         {
             if (message.getNoteNumber() == 60){
-                keyPressed(0, false);
+                // keyPressed(0, false);
             }
             if (message.getNoteNumber() == 62){
-                keyPressed(1, false);
+                // keyPressed(1, false);
             }
             //lfoValuePtr = &lfoValue;
         }
     }
-    */
-    
-    
-    
-    
 
+}
+
+void Engine::resetEnvelope(int envelopeIndex) {
+    envEds[envelopeIndex]->resetEnv();
 }
 
 /*
@@ -208,7 +215,7 @@ void Engine::keyPressed(int index, bool pressed){
     }
 
 }
- */
+*/
 
 
 void Engine::reset()
@@ -250,6 +257,9 @@ void Engine::parameterChanged(const String& parameterID, float newValue )
         
         if(parameterID == Parameters::globalToggleStringArray[i]){
             globalToggleArray[i] = (bool) newValue;
+            
+            // TODO: Causes envelop reset
+            toggleActivated[i] = (newValue == 1.0f);
         }
     }
     

@@ -137,10 +137,13 @@ void WubDaddyAudioProcessorEditor::paint (juce::Graphics& g)
 
     //below "clicks" on the plugin so it has focus, so it receives keypresses
     //TODO: probably a better/ more robust way to do this
-    if (!this->hasKeyboardFocus(true) && this->isVisible())
+    /*
+    if (!this->hasKeyboardFocus(false) && this->isVisible())
     {
       this->grabKeyboardFocus();
     }
+    */
+    
 
 }
 
@@ -262,28 +265,26 @@ void WubDaddyAudioProcessorEditor::resized()
 //key press logic to turn on/off global toggles
 
 bool WubDaddyAudioProcessorEditor::keyPressed(const KeyPress &k) {
-    bool flag = false;
-    if( k.getTextCharacter() == 'a' ){
+    if (k.getTextCharacter() == 'a') {
         globalButtonArray[0].triggerClick();
-        flag = true;
+        return true;
     }
-    if( k.getTextCharacter() == 's' ){
+    if (k.getTextCharacter() == 's') {
         globalButtonArray[1].triggerClick();
-        flag = true;
+        return true;
     }
-    if( k.getTextCharacter() == 'd' ){
+    if (k.getTextCharacter() == 'd') {
         globalButtonArray[2].triggerClick();
-        flag = true;
+        return true;
     }
-    if( k.getTextCharacter() == 'f' ){
+    if (k.getTextCharacter() == 'f') {
         globalButtonArray[3].triggerClick();
-        flag = true;
+        return true;
     }
-    if( k.getTextCharacter() == 'g' ){
+    if (k.getTextCharacter() == 'g') {
         globalButtonArray[4].triggerClick();
-        flag = true;
+        return true;
     }
-    //if true then keypress is "consumed" and not passed anywhere else
-    return flag;
- 
+
+    return false;
 }

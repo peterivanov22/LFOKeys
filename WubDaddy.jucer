@@ -26,6 +26,10 @@
             file="Source/WavetableOscillator.h"/>
     </GROUP>
     <GROUP id="{C285A267-F9A8-B968-C413-6ED5ED4B81D4}" name="Source">
+      <FILE id="C72ReU" name="SystemMidiInputHandler.cpp" compile="1" resource="0"
+            file="Source/SystemMidiInputHandler.cpp"/>
+      <FILE id="MSCyjC" name="SystemMidiInputHandler.h" compile="0" resource="0"
+            file="Source/SystemMidiInputHandler.h"/>
       <FILE id="HaMl0m" name="Parameters.h" compile="0" resource="0" file="Source/Parameters.h"/>
       <FILE id="DmCAzj" name="PluginProcessor.cpp" compile="1" resource="0"
             file="Source/PluginProcessor.cpp"/>

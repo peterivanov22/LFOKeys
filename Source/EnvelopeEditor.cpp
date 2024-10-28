@@ -487,3 +487,8 @@ void EnvelopeEditor::updatePaintingEnv()
         repaint();
     }
 }
+
+void EnvelopeEditor::resetEnv()
+{
+    env.reset(&envDesc, 0);  // Start from segment index 0
+}

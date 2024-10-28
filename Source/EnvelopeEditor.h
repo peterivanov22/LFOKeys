@@ -31,6 +31,8 @@ public:
 
     //this needs to be fixed
     MultiSegmentEnvelopeGenerator::Descriptor envDesc; // fixed pixels size envelope descriptor
+    
+    void resetEnv();
 
 private:
 

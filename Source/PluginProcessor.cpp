@@ -29,11 +29,12 @@ WubDaddyAudioProcessor::WubDaddyAudioProcessor()
 //question:  can we initialize the unique_ptr vector envEds in the intializer? Or in the header file? It seems problematic so I'm essentially initializing it in the engine file
 {
     //createEditorLayout();
-    
+    midiHandler.startListening();
 }
 
 WubDaddyAudioProcessor::~WubDaddyAudioProcessor()
 {
+    midiHandler.stopListening();
 }
 
 //==============================================================================
@@ -47,7 +48,7 @@ bool WubDaddyAudioProcessor::acceptsMidi() const
    #if JucePlugin_WantsMidiInput
     return true;
    #else
-    return false;
+#return false;
    #endif
 }
 
@@ -62,11 +63,9 @@ bool WubDaddyAudioProcessor::producesMidi() const
 
 bool WubDaddyAudioProcessor::isMidiEffect() const
 {
-   #if JucePlugin_IsMidiEffect
+   // if JucePlugin_IsMidiEffect
     return true;
-   #else
-    return false;
-   #endif
+    // return false;
 }
 
 double WubDaddyAudioProcessor::getTailLengthSeconds() const
@@ -160,9 +159,6 @@ void WubDaddyAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juc
         engine.processTempoSync(hostInfo);
     }
     
-
-    
-
     // In case we have more outputs than inputs, this code clears any output
     // channels that didn't contain input data, (because these aren't
     // guaranteed to be empty - they may contain garbage).
