@@ -25,19 +25,20 @@ void SystemMidiInputHandler::handleIncomingMidiMessage(juce::MidiInput* source, 
         DBG("MIDI Note On: " << noteNumber);
 
         // Map the MIDI note to the corresponding globalButtonArray index
+        //TODO: Find way to refer to globalButtonArray, which are defined in PluginEditor
         switch (noteNumber)
         {
             case 24: // C1
-                globalButtonArray[0].triggerClick();
+                //globalButtonArray[0].triggerClick();
                 break;
             case 25: // C#1
-                globalButtonArray[1].triggerClick();
+                //globalButtonArray[1].triggerClick();
                 break;
             case 26: // D1
-                globalButtonArray[2].triggerClick();
+                //globalButtonArray[2].triggerClick();
                 break;
             case 28: // E#1
-                globalButtonArray[3].triggerClick();
+                //globalButtonArray[3].triggerClick();
                 break;
             default:
                 break;

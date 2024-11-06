@@ -75,7 +75,7 @@ private:
 
     std::vector<std::unique_ptr<EnvelopeEditor>>& envEds;
 
-    static const int maxEnvelopes = 4;
+    static const int maxEnvelopes = 5;
     
     // TODO: causes envelope reset on toggle switch
     bool toggleActivated[maxEnvelopes] = { false };

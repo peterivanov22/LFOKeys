@@ -1,5 +1,7 @@
 #include "EnvelopeEditor.h"
 #include "Settings.h"
+#include "LookAndFeel.h"
+
 
 EnvelopeEditor::EnvelopeEditor() : mouseEditModel(envDesc), env(MSEG_DEFAULT_PIXELS_WIDTH)
 {
@@ -21,16 +23,17 @@ EnvelopeEditor::EnvelopeEditor(int flag) : mouseEditModel(envDesc), env(MSEG_DEF
     //flag determines shape
     if (envDesc.empty()){
         if (flag == 0){
-            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
-            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 0.0f, 1.0f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    8*MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 0.0f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
         }
         if (flag == 1){
             envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
-            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 0.0f, 2.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
 
         }
         if (flag == 2){
-            envDesc.push_back({ 0.0f, 1.0f, 0.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 0.0f, 1.0f, -2.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
             envDesc.push_back({ 1.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
 
         }
@@ -43,7 +46,7 @@ EnvelopeEditor::EnvelopeEditor(int flag) : mouseEditModel(envDesc), env(MSEG_DEF
 
         }
         if (flag == 4){
-            envDesc.push_back({ 0.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2 });
+            envDesc.push_back({ 0.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH });
         }
     }
 }
@@ -80,7 +83,7 @@ void EnvelopeEditor::paint(Graphics& g)
     }
 
 
-    g.setColour(Colours::grey);
+    g.setColour(WubLookAndFeel::gradient[3]);
 
     // put a circle at every segment start point
     Rectangle<float> dotRect(2 * DOT_RADIUS, 2 * DOT_RADIUS);
@@ -109,8 +112,8 @@ void EnvelopeEditor::paint(Graphics& g)
     p.lineTo(fx, fy); // the very last line section 
 
     // paint the graph
-    g.setColour(juce::Colours::white);
-    g.strokePath(p, PathStrokeType(2.0f));
+    g.setColour(WubLookAndFeel::gradient[0]);
+    g.strokePath(p, PathStrokeType(4.0f));
 }
 
 /*======================================================================================================================*/

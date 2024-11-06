@@ -27,7 +27,8 @@ processor(p)
     envEds.push_back(std::make_unique<EnvelopeEditor>(1));
     envEds.push_back(std::make_unique<EnvelopeEditor>(2));
     envEds.push_back(std::make_unique<EnvelopeEditor>(3));
-    
+    envEds.push_back(std::make_unique<EnvelopeEditor>(4));
+
     // 4th envelop causing error with negative numbers
     //envEds.push_back(std::make_unique<EnvelopeEditor>(4));
 

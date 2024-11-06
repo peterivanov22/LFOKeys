@@ -26,6 +26,7 @@
             file="Source/WavetableOscillator.h"/>
     </GROUP>
     <GROUP id="{C285A267-F9A8-B968-C413-6ED5ED4B81D4}" name="Source">
+      <FILE id="YP21NJ" name="LookAndFeel.h" compile="0" resource="0" file="Source/LookAndFeel.h"/>
       <FILE id="C72ReU" name="SystemMidiInputHandler.cpp" compile="1" resource="0"
             file="Source/SystemMidiInputHandler.cpp"/>
       <FILE id="MSCyjC" name="SystemMidiInputHandler.h" compile="0" resource="0"
