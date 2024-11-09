@@ -120,7 +120,7 @@ WubDaddyAudioProcessorEditor::WubDaddyAudioProcessorEditor (WubDaddyAudioProcess
                 return String("IDK");
         };
 
-        rateSliderArray[i].setValue(0.5);
+        //rateSliderArray[i].setValue(0.5);
 
         eqSliderMinArray[i].textFromValueFunction = [](double value)
         {
@@ -191,10 +191,13 @@ WubDaddyAudioProcessorEditor::WubDaddyAudioProcessorEditor (WubDaddyAudioProcess
 
     
     //change some initial parameters of the plugin for fun
-    globalButtonArray[0]->setToggleState(true, NotificationType::dontSendNotification);
-    rateSliderArray[1].setValue(0.75);
-    rateSliderArray[2].setValue(0);
+    //TODO: prob wrong place to set initial values like this, should do it else where
+    //globalButtonArray[0]->setToggleState(true, NotificationType::sendNotification);
+    //  rateSliderArray[1].setValue(0.75);
+    //rateSliderArray[2].setValue(0.25);
     eqSliderMinArray[1].setValue(625);
+    eqSliderMinArray[3].setValue(350);
+
     eqSliderMaxArray[2].setValue(1250);
 
 

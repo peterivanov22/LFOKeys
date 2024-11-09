@@ -51,15 +51,19 @@ processor(p)
         apvts.addParameterListener(Parameters::EQToggleStringArray[i], this);
         apvts.addParameterListener(Parameters::globalToggleStringArray[i], this);
         
-        userVolumeArray[i]=0;
-        userEQMinArray[i]= 1.0;
-        userEQMaxArray[i]= 20000.0;
 
+
+        //initialize variables
+        rateArray[i] = (double) *apvts.getRawParameterValue(Parameters::rateStringArray[i]);
+        userVolumeArray[i]=*apvts.getRawParameterValue(Parameters::volumeStringArray[i]);
+        userEQMinArray[i]= (double) *apvts.getRawParameterValue(Parameters::EQMinStringArray[i]);
+        userEQMaxArray[i]= (double) *apvts.getRawParameterValue(Parameters::EQMaxStringArray[i]);
         
+        globalToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::globalToggleStringArray[i]);
         volumeToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::volumeToggleStringArray[i]);
         EQToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::EQToggleStringArray[i]);
-        globalToggleArray[i] = (bool) *apvts.getRawParameterValue(Parameters::globalToggleStringArray[i]);
-   
+
+        
         lowPassArray[i].setEnabled(EQToggleArray[i]);
         highPassArray[i].setEnabled(EQToggleArray[i]);
 
@@ -85,7 +89,11 @@ void Engine::prepare(const dsp::ProcessSpec& spec)
         
         lowPassArray[i].setMode(dsp::LadderFilterMode::LPF12);
         highPassArray[i].setMode(dsp::LadderFilterMode::HPF12);
-        gainArray[i].setGainLinear(1);
+        
+        //gainArray[i].setGainLinear(1);
+        
+        //below smooths out the clicks
+        gainArray[i].setRampDurationSeconds(0.05);
 
         waveOscArray[i]->prepare(spec);
     }
@@ -119,8 +127,8 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::M
             
             // This will activate when the toggle changes to reset the envelope
             if (toggleActivated[i]) {
-                resetEnvelope(i);
-                toggleActivated[i] = false;
+                //resetEnvelope(i);
+                //toggleActivated[i] = false;
             }
             
             highPassArray[i].process(context);

@@ -54,16 +54,26 @@ public:
             globalToggleStringArray[i] = ID_GLOBAL_TOGGLE + String(i);
             volumeToggleStringArray[i] = ID_VOLUME_TOGGLE + String(i);
             EQToggleStringArray[i] = ID_EQ_TOGGLE + String(i);
+            String dummy = "Dummy" + String(i);
             
             
+            if (i==1){
+                params.push_back(std::make_unique<juce::AudioParameterFloat> (rateStringArray[i],"Rate", 0.0f, 1.0f, 0.75f));
+            }
+            else{
+                params.push_back(std::make_unique<juce::AudioParameterFloat> (rateStringArray[i],"Rate", 0.0f, 1.0f, 0.5f));
+            }
+
             params.push_back(std::make_unique<juce::AudioParameterFloat> (volumeStringArray[i], "Volume", 0.0f, 1.0f, 1.0f));
-            params.push_back(std::make_unique<juce::AudioParameterFloat> (EQMinStringArray[i], "Low FQ", 1.0f, 20000.0f, 1.0f));
-            params.push_back(std::make_unique<juce::AudioParameterFloat> (EQMaxStringArray[i], "High FQ", 1.0f, 20000.0f, 20000.0f));
-            params.push_back(std::make_unique<juce::AudioParameterFloat> (rateStringArray[i],"Rate", 0.0f, 1.0f, 0.0f));
+            params.push_back(std::make_unique<juce::AudioParameterFloat> (EQMinStringArray[i], "LowCut", 1.0f, 20000.0f, 1.0f));
+            params.push_back(std::make_unique<juce::AudioParameterFloat> (EQMaxStringArray[i], "HighCut", 1.0f, 20000.0f, 20000.0f));
+
             params.push_back(std::make_unique<juce::AudioParameterBool> (globalToggleStringArray[i],"Global Toggle", false));
             params.push_back(std::make_unique<juce::AudioParameterBool> (volumeToggleStringArray[i],"Volume Toggle", true));
             params.push_back(std::make_unique<juce::AudioParameterBool> (EQToggleStringArray[i],"EQ Toggle", true));
-
+            
+            //add below  so theres 8 parameters so they are lined up in ableton (columns of 4)
+            params.push_back(std::make_unique<juce::AudioParameterBool> (dummy,"Dummy ", false));
         }
  
 

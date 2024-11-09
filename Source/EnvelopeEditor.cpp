@@ -23,31 +23,46 @@ EnvelopeEditor::EnvelopeEditor(int flag) : mouseEditModel(envDesc), env(MSEG_DEF
     //flag determines shape
     if (envDesc.empty()){
         if (flag == 0){
-            envDesc.push_back({ 0.0f, 1.0f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
-            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    8*MSEG_DEFAULT_PIXELS_WIDTH/10 });
-            envDesc.push_back({ 1.0f, 0.0f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
-        }
-        if (flag == 1){
             envDesc.push_back({ 0.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
             envDesc.push_back({ 1.0f, 0.0f, 2.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
+        }
+        if (flag == 1){
+            envDesc.push_back({ 0.0f, 1.0f, 1.0f,    2*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    6*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+            envDesc.push_back({ 1.0f, 0.0f, 2.0f,    2*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+
+            envDesc.push_back({ 0.0f, 0.0f, 0.0f,    5*MSEG_DEFAULT_PIXELS_WIDTH/10 });
 
         }
         if (flag == 2){
-            envDesc.push_back({ 0.0f, 1.0f, -2.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
-            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 0.0f, 1.0f, -4.0f,    18*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    2*MSEG_DEFAULT_PIXELS_WIDTH/20 });
 
         }
         
         if (flag == 3){
+            envDesc.push_back({ 0.0f, 1.0f, -4.0f,    18*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+            envDesc.push_back({ 1.0f, 0.0f, 0.0f,    2*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+
+        }
+        if (flag == 4){
+            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH });
+        }
+        
+        //below is sidechain shape
+        /*
+            envDesc.push_back({ 0.0f, 1.0f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    8*MSEG_DEFAULT_PIXELS_WIDTH/10 });
+            envDesc.push_back({ 1.0f, 0.0f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/10 });
+         */
+        
+        //below is sine shape
+        /*
             envDesc.push_back({ 0.5f, 1.0f, 2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4});
             envDesc.push_back({ 1.0f, 0.5f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4 });
             envDesc.push_back({ 0.5f, 0.0f, 2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4 });
             envDesc.push_back({ 0.0f, 0.5f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/4});
-
-        }
-        if (flag == 4){
-            envDesc.push_back({ 0.0f, 0.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH });
-        }
+         */
     }
 }
 
