@@ -13,8 +13,7 @@
 
 
 
-Engine::Engine(AudioProcessorValueTreeState & a, AudioProcessor & p, EnvelopeEditor& e, std::vector<std::unique_ptr<EnvelopeEditor>>& envEds):
-envEd(e),
+Engine::Engine(AudioProcessorValueTreeState & a, AudioProcessor & p, std::vector<std::unique_ptr<EnvelopeEditor>>& envEds):
 envEds(envEds),
 env(EnvelopeEditor::MSEG_DEFAULT_PIXELS_WIDTH),
 apvts(a),
@@ -28,14 +27,18 @@ processor(p)
     envEds.push_back(std::make_unique<EnvelopeEditor>(2));
     envEds.push_back(std::make_unique<EnvelopeEditor>(3));
     envEds.push_back(std::make_unique<EnvelopeEditor>(4));
+    
+    //apvts.state.setProperty (myCoolParameterID, var(5), nullptr);
+    //myCoolParameter.referTo (pluginState.state.getPropertyAsValue (myCoolParameterID, nullptr));
+
 
     // 4th envelop causing error with negative numbers
     //envEds.push_back(std::make_unique<EnvelopeEditor>(4));
 
     int i = 0;
-    for (auto&& oneEd : envEds ){
-        oneEd->addChangeListener(this);
-        setMSEGTable(*oneEd,msegTableArray[i]);
+    for (auto&& envEd : envEds ){
+        envEd->addChangeListener(this);
+        setMSEGTable(*envEd,msegTableArray[i]);
         waveOscArray[i] = new WavetableOscillator(msegTableArray[i]);
         i++;
     }
@@ -54,8 +57,9 @@ processor(p)
 
 
         //initialize variables
-        rateArray[i] = (double) *apvts.getRawParameterValue(Parameters::rateStringArray[i]);
-        userVolumeArray[i]=*apvts.getRawParameterValue(Parameters::volumeStringArray[i]);
+        updateRate((float) *apvts.getRawParameterValue(Parameters::rateStringArray[i]), i);
+
+        userVolumeArray[i] = 1.0f - *apvts.getRawParameterValue(Parameters::volumeStringArray[i]);
         userEQMinArray[i]= (double) *apvts.getRawParameterValue(Parameters::EQMinStringArray[i]);
         userEQMaxArray[i]= (double) *apvts.getRawParameterValue(Parameters::EQMaxStringArray[i]);
         
@@ -67,14 +71,11 @@ processor(p)
         lowPassArray[i].setEnabled(EQToggleArray[i]);
         highPassArray[i].setEnabled(EQToggleArray[i]);
 
-        if(volumeToggleArray[i]){
-            lfoValuePtrArray[i] = &lfoVolumeArray[i];
+        if(globalToggleArray[i]){
+            m_rate = rateArray[i];
         }
-        else{
-            lfoValuePtrArray[i] =  &defaultVolumeValue;
-        }
+        
         //do we need below here?
-        userVolumeArray[i] = 1 - *apvts.getRawParameterValue(Parameters::volumeStringArray[i]);
     }
 }
 
@@ -110,21 +111,40 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context){
     
 void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::MidiBuffer& midiMessages){
 
+    //convert each lfo waverform into volume/eq modulation
     for (int i=0; i< maxEnvelopes; i++){
+        
         auto lfoOut = waveOscArray[i]->getSample(m_lfo);    // [5]
-        auto lfoVolume = juce::jmap (lfoOut, 0.0f, 1.0f, userVolumeArray[i], 1.0f);
-        lfoVolumeArray[i] = lfoVolume;
+        
+        //sanitize lfo out
+        //TODO: understand if this is ever hit, and why?
+        //would get regular occurences of super loud value, why?
+        //is it a rate problem since it happens regularly?
+        if (lfoOut > 1)
+            lfoOut = 1.0;
+        if (lfoOut < 0)
+            lfoOut = 0.0;
+        
+        lfoVolumeArray[i] = juce::jmap (lfoOut, 0.0f, 1.0f, userVolumeArray[i], 1.0f);
         lfoEQArray[i] = juce::jmap (lfoOut, 0.0f, 1.0f, userEQMinArray[i], userEQMaxArray[i]);
         
         highPassArray[i].setCutoffFrequencyHz(userEQMinArray[i]);
         lowPassArray[i].setCutoffFrequencyHz(lfoEQArray[i]);
-        gainArray[i].setGainLinear(*lfoValuePtrArray[i]);
+        
+        if (volumeToggleArray[i]){
+            //gainArray[i].setGainLinear(1.0f);
+            gainArray[i].setGainLinear(lfoVolumeArray[i]);
+        }
+        else
+            gainArray[i].setGainLinear(1.0f);
     }
 
+    
+    
+    
     for (int i=0; i< maxEnvelopes; i++){
         if (globalToggleArray[i]){
-            m_rate = rateArray[i];
-            
+            //m_rate = rateArray[i];
             // This will activate when the toggle changes to reset the envelope
             if (toggleActivated[i]) {
                 //resetEnvelope(i);
@@ -137,10 +157,11 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::M
             break;
         }
     }
+    
     //old code for processing midi
     //logic now changed to parameter buttons that user can toggle
     
-    
+    /*
     for (const auto metadata : midiMessages)
     {
         auto message = metadata.getMessage();
@@ -170,12 +191,10 @@ void Engine::process(const dsp::ProcessContextReplacing<float>& context, juce::M
             //lfoValuePtr = &lfoValue;
         }
     }
+     */
 
 }
 
-void Engine::resetEnvelope(int envelopeIndex) {
-    envEds[envelopeIndex]->resetEnv();
-}
 
 /*
 void Engine::keyPressed(int index, bool pressed){
@@ -199,6 +218,11 @@ void Engine::keyPressed(int index, bool pressed){
 */
 
 
+void Engine::resetEnvelope(int envelopeIndex) {
+    envEds[envelopeIndex]->resetEnv();
+}
+
+
 void Engine::reset()
 {
 }
@@ -210,10 +234,13 @@ void Engine::parameterChanged(const String& parameterID, float newValue )
     for (int i = 0;i<maxEnvelopes; i++){
         
         if (parameterID == Parameters::volumeStringArray[i]) {
-            userVolumeArray[i] = 1 - newValue;
+            userVolumeArray[i] = 1.0f - newValue;
         }
         if (parameterID == Parameters::rateStringArray[i]) {
             updateRate(newValue, i);
+            if(globalToggleArray[i]){
+                m_rate = rateArray[i];
+            }
         }
         if (parameterID == Parameters::EQMinStringArray[i]) {
             userEQMinArray[i] = newValue;
@@ -223,11 +250,7 @@ void Engine::parameterChanged(const String& parameterID, float newValue )
         }
         if(parameterID == Parameters::volumeToggleStringArray[i]){
             volumeToggleArray[i] = (bool) newValue;
-            if (volumeToggleArray[i]){
-                lfoValuePtrArray[i] = &lfoVolumeArray[i];
-            }
-            else
-                lfoValuePtrArray[i] = &defaultVolumeValue;
+
         }
         if(parameterID == Parameters::EQToggleStringArray[i]){
             EQToggleArray[i] = (bool) newValue;
@@ -239,6 +262,11 @@ void Engine::parameterChanged(const String& parameterID, float newValue )
         if(parameterID == Parameters::globalToggleStringArray[i]){
             globalToggleArray[i] = (bool) newValue;
             
+            if (newValue){
+                m_rate = rateArray[i];
+                updateGlobal(i);
+            }
+            
             // TODO: Causes envelop reset
             toggleActivated[i] = (newValue == 1.0f);
         }
@@ -247,24 +275,27 @@ void Engine::parameterChanged(const String& parameterID, float newValue )
 }
 
 void Engine::updateRate(float value, int index){
-    if (value == 0){
+    if (0 <= value && value < 0.125){
         rateArray[index] = 0.25;
     }
-    else if (value == 0.25){
+    else if (0.125 <= value && value < 0.375){
         rateArray[index] = 0.5;
     }
-    else if (value == 0.5){
+    else if (0.375 <= value && value < 0.625){
         rateArray[index] = 1;
     }
-    else if (value == 0.75){
+    else if (0.625 <= value && value < 0.875){
         rateArray[index] = 2;
     }
-    else if (value == 1){
+    else if (0.875 <= value && value <= 1.0){
         rateArray[index] = 4;
     }
     else
         rateArray[index] = 1;
-        
+}
+
+void Engine::updateGlobal(int index){
+    
 }
 
 

@@ -66,6 +66,7 @@ public:
     // Encapsulate this better in production <- This is what the JUCE guys say, not sure
     AudioProcessorValueTreeState apvts;
     
+    ValueTree envEdsValueTree {"EnvelopeEditor"};
     //We probably don't want to pass entire envelop editor to engine
     //But i guess we should define it here and initialize in constructor
     //We want to pass it to editor

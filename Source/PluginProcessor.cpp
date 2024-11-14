@@ -23,7 +23,7 @@ WubDaddyAudioProcessor::WubDaddyAudioProcessor()
 #endif
 , apvts(*this, nullptr, "APVTS", Parameters::createParameterLayout())
 , envEd(), envEd2()
-, engine(apvts, *this, envEd, envEds)
+, engine(apvts, *this, envEds)
 //interesting note: I can pass this class (*this) as AudioProcessor to engine, but things break if I pass it as a WubDaddyAudioProcessor to engine. (my  guess is we can't pass it as two different objects in initializer, since its being passed as audioProcessor to apvts (*this)). But we are passing it as a WubDaddyAudioProcessor to the Plugin Editor, in the editor constructor.
 
 //question:  can we initialize the unique_ptr vector envEds in the intializer? Or in the header file? It seems problematic so I'm essentially initializing it in the engine file
@@ -84,6 +84,7 @@ int WubDaddyAudioProcessor::getCurrentProgram()
     return 0;
 }
 
+//TODO: I guess this is for setting the preset? Not sure
 void WubDaddyAudioProcessor::setCurrentProgram (int index)
 {
 }
@@ -205,6 +206,31 @@ juce::AudioProcessorEditor* WubDaddyAudioProcessor::createEditor()
     return new WubDaddyAudioProcessorEditor (*this);
 }
 
+juce::ValueTree createSegmentValueTree(MultiSegmentEnvelopeGenerator::SegmentDescriptor & segment){
+   
+    ValueTree tree ("Segment");
+
+    tree.setProperty ("initialValue", segment.initialValue, nullptr);
+    tree.setProperty ("finalValue", segment.finalValue, nullptr);
+    tree.setProperty ("curvature", segment.curvature, nullptr);
+    tree.setProperty ("lengthSamples", segment.lengthSamples, nullptr);
+
+    return tree;
+}
+
+juce::ValueTree createEnvelopeValueTree(EnvelopeEditor & envelope, int i){
+    
+    ValueTree tree ("Envelope" + String(i));
+    
+    for (int j =0; j< envelope.envDesc.size(); j++){
+        tree.appendChild(createSegmentValueTree(envelope.envDesc[j]), nullptr);
+    }
+    return tree;
+}
+
+
+
+
 //==============================================================================
 void WubDaddyAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
@@ -212,9 +238,25 @@ void WubDaddyAudioProcessor::getStateInformation (juce::MemoryBlock& destData)
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
     
+
+
+    
+    for (int i=0; i<envEds.size();i++){
+        if (apvts.state.getChildWithName("Envelope" + String(i)).isValid())
+            apvts.state.removeChild(apvts.state.getChildWithName("Envelope" + String(i)), nullptr);
+
+        
+        apvts.state.appendChild(createEnvelopeValueTree(*envEds[i], i), nullptr);
+    }
+    
     auto state = apvts.copyState();
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
+    
+    
+
+    
+    
 }
 
 void WubDaddyAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
@@ -223,9 +265,40 @@ void WubDaddyAudioProcessor::setStateInformation (const void* data, int sizeInBy
     // whose contents will have been created by the getStateInformation() call.
     std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
-    if (xmlState.get() != nullptr)
+    if (xmlState.get() != nullptr){
         if (xmlState->hasTagName (apvts.state.getType()))
             apvts.replaceState (juce::ValueTree::fromXml (*xmlState));
+        
+        for (int i =0; i< envEds.size(); i++){
+            juce::XmlElement* envelopeXml (xmlState->getChildByName ("Envelope" + String(i)));
+            if (envelopeXml != nullptr)
+            {
+                envEds[i]->envDesc.clear();
+
+                for (int j = 0; j < envelopeXml->getNumChildElements(); j++){
+                    juce::XmlElement* segmentXML (envelopeXml->getChildElement(j));
+                    envEds[i]->envDesc.push_back
+                    ({(float) segmentXML->getDoubleAttribute("initialValue"),(float)  segmentXML->getDoubleAttribute("finalValue"),(float) segmentXML->getDoubleAttribute("curvature"),segmentXML->getIntAttribute("lengthSamples") }
+                     );
+
+                }
+                
+                
+
+
+            }
+        }
+
+
+        
+    }
+
+    
+    
+    
+    //envEds[0]->envDesc.clear();
+    //envEds[0]->envDesc.push_back({ 1.0f, 1.0f, 0.0f,    EnvelopeEditor::MSEG_DEFAULT_PIXELS_WIDTH });
+
 }
 
 //==============================================================================

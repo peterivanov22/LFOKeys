@@ -27,9 +27,9 @@ EnvelopeEditor::EnvelopeEditor(int flag) : mouseEditModel(envDesc), env(MSEG_DEF
             envDesc.push_back({ 1.0f, 0.0f, 2.0f,    9*MSEG_DEFAULT_PIXELS_WIDTH/10 });
         }
         if (flag == 1){
-            envDesc.push_back({ 0.0f, 1.0f, 1.0f,    2*MSEG_DEFAULT_PIXELS_WIDTH/20 });
-            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    6*MSEG_DEFAULT_PIXELS_WIDTH/20 });
-            envDesc.push_back({ 1.0f, 0.0f, 2.0f,    2*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+            envDesc.push_back({ 0.0f, 1.0f, 1.0f,    3*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    4*MSEG_DEFAULT_PIXELS_WIDTH/20 });
+            envDesc.push_back({ 1.0f, 0.0f, 2.0f,    3*MSEG_DEFAULT_PIXELS_WIDTH/20 });
 
             envDesc.push_back({ 0.0f, 0.0f, 0.0f,    5*MSEG_DEFAULT_PIXELS_WIDTH/10 });
 
@@ -46,7 +46,9 @@ EnvelopeEditor::EnvelopeEditor(int flag) : mouseEditModel(envDesc), env(MSEG_DEF
 
         }
         if (flag == 4){
-            envDesc.push_back({ 1.0f, 1.0f, 0.0f,    MSEG_DEFAULT_PIXELS_WIDTH });
+            envDesc.push_back({ 0.0f, 1.0f, -2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2 });
+            envDesc.push_back({ 1.0f, 0.0f, 2.0f,    MSEG_DEFAULT_PIXELS_WIDTH/2 });
+
         }
         
         //below is sidechain shape

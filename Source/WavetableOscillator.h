@@ -22,11 +22,7 @@ public:
         //jassert (wavetable.getNumChannels() == 1);
     }
     
-    void setWavetable(AudioSampleBuffer& wavetableToUse)
-    {
-        //wavetable = wavetableToUse;
-    }
-    
+
     void prepare (const dsp::ProcessSpec& spec) noexcept
     {
         sampleRate = (float) spec.sampleRate;

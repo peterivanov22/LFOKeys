@@ -107,7 +107,7 @@ WubDaddyAudioProcessorEditor::WubDaddyAudioProcessorEditor (WubDaddyAudioProcess
         rateSliderArray[i].textFromValueFunction = [](double value)
         {
             if (value == 0)
-                return juce::String(1);
+                return juce::String("1");
             if (value == 0.25)
                 return juce::String("1/2");
             if (value == 0.5)
@@ -190,15 +190,6 @@ WubDaddyAudioProcessorEditor::WubDaddyAudioProcessorEditor (WubDaddyAudioProcess
     }
 
     
-    //change some initial parameters of the plugin for fun
-    //TODO: prob wrong place to set initial values like this, should do it else where
-    //globalButtonArray[0]->setToggleState(true, NotificationType::sendNotification);
-    //  rateSliderArray[1].setValue(0.75);
-    //rateSliderArray[2].setValue(0.25);
-    eqSliderMinArray[1].setValue(625);
-    eqSliderMinArray[3].setValue(350);
-
-    eqSliderMaxArray[2].setValue(1250);
 
 
     
