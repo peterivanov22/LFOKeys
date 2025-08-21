@@ -2,7 +2,7 @@
 
 LFOKeys is a VST3 plugin  that lets you play and combine different waveforms using your computer keyboard. It’s currently hardwired to the keys A, S, D, F, G to trigger five distinct waveforms. You can click to edit the LFO wave shapes to rhythmically control EQ and volume, with supported LFO rates of 1, 1/2, 1/4, 1/8, and 1/16.
 
-
+To edit the waveforms, click and drag any of the points. To add a new point double click on a segment. To remove a point double click on a point. To "bend" a line segment press and hold option, then click and drag the line segment
 
 ![alt text](image.png)
 
