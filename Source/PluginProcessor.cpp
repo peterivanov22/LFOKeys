@@ -24,7 +24,9 @@ WubDaddyAudioProcessor::WubDaddyAudioProcessor()
 , apvts(*this, nullptr, "APVTS", Parameters::createParameterLayout())
 , envEd(), envEd2()
 , engine(apvts, *this, envEds)
-//interesting note: I can pass this class (*this) as AudioProcessor to engine, but things break if I pass it as a WubDaddyAudioProcessor to engine. (my  guess is we can't pass it as two different objects in initializer, since its being passed as audioProcessor to apvts (*this)). But we are passing it as a WubDaddyAudioProcessor to the Plugin Editor, in the editor constructor.
+//interesting note: I can pass this class (*this) as AudioProcessor to engine, but things break if I pass it as a WubDaddyAudioProcessor to engine. 
+//(my  guess is we can't pass it as two different objects in initializer, since its being passed as audioProcessor to apvts (*this)). 
+//But we are passing it as a WubDaddyAudioProcessor to the Plugin Editor, in the editor constructor.
 
 //question:  can we initialize the unique_ptr vector envEds in the intializer? Or in the header file? It seems problematic so I'm essentially initializing it in the engine file
 {

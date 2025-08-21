@@ -56,7 +56,7 @@ public:
     ~MultiSegmentEnvelopeGenerator() {}
 
 
-    //initial value i believe is first y values
+    //initial value  is first y values
     //final value is second y value
     //curvature is plugged into table
     //

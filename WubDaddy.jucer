@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="kHJpmV" name="WubDaddy" projectType="audioplug" jucerFormatVersion="1"
+<JUCERPROJECT id="kHJpmV" name="LFOKeys" projectType="audioplug" jucerFormatVersion="1"
               pluginCharacteristicsValue="pluginWantsMidiIn" pluginCode="WUBD"
               pluginVST3Category="Fx" pluginFormats="buildStandalone,buildVST3"
               displaySplashScreen="1">
-  <MAINGROUP id="YA46Rt" name="WubDaddy">
+  <MAINGROUP id="YA46Rt" name="LFOKeys">
     <GROUP id="{EED09624-3599-9D78-BB21-551412FB87CE}" name="Graphics">
       <FILE id="NNArwq" name="EnvelopeEditor.cpp" compile="1" resource="0"
             file="Source/EnvelopeEditor.cpp"/>
@@ -46,8 +46,12 @@
     <XCODE_MAC targetFolder="Builds/MacOSX" hardenedRuntime="1">
       <CONFIGURATIONS>
         <CONFIGURATION isDebug="1" name="Debug" targetName="WubDaddy" stripLocalSymbols="1"/>
-        <CONFIGURATION name="Release" targetName="WubDaddy" osxArchitecture="Native"
+        <CONFIGURATION name="Release" targetName="LFOKeys" osxArchitecture="Native"
                        stripLocalSymbols="1"/>
+        <CONFIGURATION isDebug="0"/>
+        <CONFIGURATION isDebug="0"/>
+        <CONFIGURATION isDebug="0"/>
+        <CONFIGURATION isDebug="0"/>
       </CONFIGURATIONS>
       <MODULEPATHS>
         <MODULEPATH id="juce_audio_basics" path="../../modules"/>
